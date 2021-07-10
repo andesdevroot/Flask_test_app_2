@@ -1,4 +1,8 @@
-from flask import Flask, jsonify, request, url_for, redirect, session, render_template
+from flask import Flask, jsonify, request, url_for, redirect, session, render_template, g
+import sqlite3
+
+from flask.json import htmlsafe_dumps
+
 
 
 app = Flask(__name__)
@@ -6,7 +10,23 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'secret'  #cokies
 
+#helpers functions  a connection database sqlite3
+def connect_db():
+    sql = sqlite3.connect('C:\Sqlite\data.db')
+    sql.row_factory = sqlite3.Row
+    return sql
 
+def get_deb():
+    if not hasattr(g, 'sqlite_db'):       
+        g.sqlite_db = connect_db()
+    return g.sqlite_db
+
+@app.teardown_appcontext
+def close_db(error):
+    if hasattr(g, 'sqlite_db'):       
+        g.sqlite_db.close()       
+
+#rutas app
 
 @app.route('/')
 def index():
@@ -69,6 +89,13 @@ def processjson():
            
     return jsonify({'result': 'Success!', 'name': name, 'location': location})
 
+@app.route('/viewresults')
+def viewresults():       
+    db = get_deb()
+    cur = db.execute('select id, name, locations from users')
+    results = cur.fetchall()
+    return '<h1>El ID  es {}. El nombre es {}. El lugar es {}.</h1>.'.format(results[0]['id'], results[0]['name'], results[0]['locations']) 
+    
 
 
 
