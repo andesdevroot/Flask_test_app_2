@@ -1,24 +1,34 @@
-from flask import Flask, jsonify, request, url_for, redirect
+from flask import Flask, jsonify, request, url_for, redirect, session, render_template
 
 
 app = Flask(__name__)
 
 app.config['DEBUG'] = True
+app.config['SECRET_KEY'] = 'secret'  #cokies
+
+
 
 @app.route('/')
 def index():
+    session.pop('name', None)
     return 'Hello, World!'
 
 #rutas con variables
 @app.route('/home', methods=['GET', ' POST'], defaults={'name': 'Default'})
 @app.route('/home/<string:name>', methods=['GET','POST'])
 def home(name):
-    return '<h1>Hola {}, tu estas en la pagina home!!</h1>'.format(name)
+    session['name'] = name
+    return render_template('home.html', name=name, display=True, mylist=[1,2,3,4,5], listofdictionaries=[{'name':'cesar'},{'name':'luis'}])
+   
 
 
 @app.route('/json')
 def json():
-    return jsonify({"key": "value", 'key2': [1,2,3,4]})
+    if 'name' in session:
+      name = session.get('name', None)
+    else:
+       name = 'NotinSession!'
+    return jsonify({"key": "value", 'key2': [1,2,3,4], 'name' : name})
 
 #query string
 @app.route('/query')
@@ -32,11 +42,7 @@ def query():
 def form():
     
     if request.method == 'GET':
-        return '''<form method="POST" action="/form">
-                <input type="text" name="name">
-                <input type="text" name="location">
-                <input type="submit">
-                </form>'''
+        return render_template('form.html')
     else:
         # name = request.form.get('name')
         # location = request.form.get('location')
