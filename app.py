@@ -3,6 +3,8 @@ from flask import Flask, jsonify, request, url_for, redirect
 
 app = Flask(__name__)
 
+app.config['DEBUG'] = True
+
 @app.route('/')
 def index():
     return 'Hello, World!'
@@ -65,6 +67,6 @@ def processjson():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
 
