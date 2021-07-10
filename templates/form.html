@@ -5,8 +5,8 @@
     <title>Formulario</title>
 
     {% block content %}
-
-    <h1>Hola soy un formulario</h1>
+        {{ super() }}
+    <h1>Formulario</h1>
     <form method="POST" action="/form">
         <input type="text" name="name">
         <input type="text" name="location">

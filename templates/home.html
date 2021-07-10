@@ -3,7 +3,7 @@
 {% block title %}Homepage {% endblock %}
 
 {% block content %}
-
+{{ super() }}
 <h1>Hola {{ name }} , tu estas en la pagina home!!</h1>
 
 
@@ -24,5 +24,8 @@
 
 <img src="{{ url_for('static', filename='images/descargar.png')}}" alt="">
 
+{% include "include_this.html" %}
+
 {% endblock %}
+
 
