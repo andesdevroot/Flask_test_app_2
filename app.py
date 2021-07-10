@@ -24,7 +24,21 @@ def query():
     location = request.args.get('location', 'Default')       
     return '<h1>Hola {}, tu eres de {} .tu estas en la pagina QUERY!!</h1>'.format(name, location)
 
-#Formulario Datos
+#Formulario con metodo POST
+@app.route('/form')
+def form():
+    return '''<form method="POST" action="/process">
+              <input type="text" name="name">
+              <input type="text" name="location">
+              <input type="submit">
+              </form>'''
+
+@app.route('/process', methods=['POST'])
+def process():
+    name = request.form.get('name')
+    location = request.form.get('location')
+    
+    return 'Hola {}. Tu eres de {}. Tu has sido registrado exitosamente'.format(name, location)
 
 
 if __name__ == '__main__':
