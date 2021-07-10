@@ -67,8 +67,12 @@ def form():
         # name = request.form.get('name')
         # location = request.form.get('location')
         
+        db = get_deb()
+        db.execute('INSERT INTO users (name, locations) VALUES (?, ?)', [request.form['name'], request.form['location']])
+        db.commit()
+        
         # return 'Hola {}. Tu eres de {}. Tu has sido registrado exitosamente'.format(name, location)
-        return redirect(url_for('home', name=request.form.get('name'), location=request.form.get('location')))
+        return redirect(url_for('home', name=request.form.get('name'), locationspy=request.form.get('locations')))
 
 
 @app.route('/process', methods=['POST'])
@@ -94,7 +98,7 @@ def viewresults():
     db = get_deb()
     cur = db.execute('select id, name, locations from users')
     results = cur.fetchall()
-    return '<h1>El ID  es {}. El nombre es {}. El lugar es {}.</h1>.'.format(results[0]['id'], results[0]['name'], results[0]['locations']) 
+    return '<h1>El ID  es {}. El nombre es {}. El lugar es {}.</h1>.'.format(results[1]['id'], results[1]['name'], results[1]['locations']) 
     
 
 
