@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for, redirect
+
 
 app = Flask(__name__)
 
@@ -25,13 +26,22 @@ def query():
     return '<h1>Hola {}, tu eres de {} .tu estas en la pagina QUERY!!</h1>'.format(name, location)
 
 #Formulario con metodo POST
-@app.route('/form')
+@app.route('/form', methods=['GET', 'POST'])
 def form():
-    return '''<form method="POST" action="/process">
-              <input type="text" name="name">
-              <input type="text" name="location">
-              <input type="submit">
-              </form>'''
+    
+    if request.method == 'GET':
+        return '''<form method="POST" action="/form">
+                <input type="text" name="name">
+                <input type="text" name="location">
+                <input type="submit">
+                </form>'''
+    else:
+        # name = request.form.get('name')
+        # location = request.form.get('location')
+        
+        # return 'Hola {}. Tu eres de {}. Tu has sido registrado exitosamente'.format(name, location)
+        return redirect(url_for('home', name=request.form.get('name'), location=request.form.get('location')))
+
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -39,6 +49,19 @@ def process():
     location = request.form.get('location')
     
     return 'Hola {}. Tu eres de {}. Tu has sido registrado exitosamente'.format(name, location)
+
+@app.route('/processjson', methods=['POST'])
+def processjson():
+    
+    data= request.get_json()
+    
+    name = data['name']
+    location = data['location']
+    
+           
+    return jsonify({'result': 'Success!', 'name': name, 'location': location})
+
+
 
 
 if __name__ == '__main__':
