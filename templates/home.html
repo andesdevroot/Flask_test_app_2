@@ -1,3 +1,9 @@
+{% extends 'base.html'   %}
+
+{% block title %}Homepage {% endblock %}
+
+{% block content %}
+
 <h1>Hola {{ name }} , tu estas en la pagina home!!</h1>
 
 
@@ -17,4 +23,6 @@
 {% endfor %}
 
 <img src="{{ url_for('static', filename='images/descargar.png')}}" alt="">
+
+{% endblock %}
 
